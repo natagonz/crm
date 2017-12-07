@@ -1,0 +1,75 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Dashboard {% endblock%}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/contact_id.css')}}" rel="stylesheet"/> 
+<div class="row">
+      <div class="col-xs-12 col-sm-9">
+        
+        <!-- User profile -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title">Deals</h4>
+          </div>
+          <div class="panel-body">
+           
+            <div class="profile__header">
+              <h4>{{ deal.title }}</h4>
+              <p class="text-muted">
+                {{ deal.description | safe }}
+              </p>
+              
+            </div>
+          </div>
+        </div>
+
+        <!-- User info -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title">Deals Info</h4>
+          </div>
+          <div class="panel-body">
+            <table class="table profile__table">
+              <tbody>
+                <tr>
+                  <th><strong>Name Or Company</strong></th>
+                  <td>{{ deal.name }}</td>
+                </tr>
+                <tr>
+                  <th><strong>Created on </strong></th>
+                  <td>{{ deal.created.strftime("%Y/%m/%d") }}</td>
+                </tr>
+                 <tr>
+                  <th><strong>Deal Status</strong></th>
+                  <td>{{ deal.status }}</td>
+                </tr>
+              
+              
+              </tbody>
+            </table>
+            <a class="btn btn-primary" href=/dashboard/edit-deals/{{ deal.id }}>Edit</a></button>
+            <button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button>
+          </div>
+        </div>
+
+
+      
+      </div>
+      
+    </div>
+
+    <script>
+                function myFunction() {
+                     var x = window.confirm("Are You Sure ?");
+                        if(x){
+                               window.location = '/dashboard/delete-deals/{{ deal.id}}' ;
+                                }
+                         else {
+                               return false;
+                              }
+                        }    
+                </script>
+
+{% endblock %}

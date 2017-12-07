@@ -1,0 +1,45 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Dashboard {% endblock%}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/deals.css')}}" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- floating icon -->
+<ul id="social_side_links">
+  <li><a href="/dashboard/add-deals"><img class="icon-float" src="https://cdn0.iconfinder.com/data/icons/round-ui-icons/512/add_blue.png" alt="" /></a></li>
+</ul>
+
+
+<div class="row">
+{% for deal in deals %}
+<div class="col-md-10">
+    <div class="card b-1 hover-shadow mb-20">
+        <div class="media card-body">
+            <div class="media-body">
+                <div class="mb-2">
+                    <span class="fs-20 pr-16"> <a href="/dashboard/deals/{{ deal.id }}">{{ deal.name }} </a></span>
+                </div>
+                <small class="fs-16 fw-300 ls-1"> {{ deal.title }}</small>
+            </div>
+        </div>
+        <footer class="card-footer flexbox align-items-center">
+            <div>
+                <strong>Created on:</strong>
+                <span>{{ deal.created.strftime("%Y/%m/%d") }}</span>           
+           </div>
+           <div>
+                <strong>Status:</strong>
+                <span>{{ deal.status }}</span>
+           </div>
+            <div class="card-hover-show">
+                <a class="btn btn-xs fs-10 btn-bold btn-info" href="/dashboard/deals/{{ deal.id }}">See Deals</a>
+            </div>
+        </footer>
+    </div>
+</div>    
+{% endfor %}
+</div>
+{% endblock %}
