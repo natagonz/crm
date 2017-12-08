@@ -1,0 +1,115 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Invoice {% endblock%}
+
+
+{% block content %}
+{% if current_user.status == "trial" %}
+
+<link href="{{url_for ('static',filename='css/invoice.css')}}" rel="stylesheet"/> 
+
+<div class="receipt-content">
+    <div class="container bootstrap snippet">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="invoice-wrapper">
+					<div class="intro">
+						Hi <strong>{{ current_user.username }}</strong>, 
+						<br>
+						Ini adalah invoice untuk layanan software kerjasales dengan metode sekali bayar
+					</div>
+
+					<div class="payment-info">
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Tanggal Pembayaran</span>
+								<strong>{{ user.created_date.strftime("%d/%m/%Y") }}</strong>
+							</div>
+							<div class="col-sm-6 text-right">
+								<span>Jatuh Tempo </span>
+								<strong>{{ user.due_date.strftime("%d/%m/%Y")}}</strong>
+							</div>
+						</div>
+					</div>
+
+					<div class="payment-details">
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Invoiced</span>
+								<strong>
+									{{ user.username }}
+								</strong>
+								<p>
+									{{ user.email }} <br>
+									{{ user.phone }}<br>
+											</p>
+							</div>
+							<div class="col-sm-6 text-right">
+								<span>Payment To</span>
+								<strong>
+									Kerja Sales
+								</strong>
+								<p>
+									kerjasales@gmail.com <br>
+									081237311256
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="line-items">
+						<div class="headers clearfix">
+							<div class="row">
+								<div class="col-xs-4">Description</div>
+								<div class="col-xs-3">Quantity</div>
+								<div class="col-xs-5 text-right">Amount</div>
+							</div>
+						</div>
+						<div class="items">
+							<div class="row item">
+								<div class="col-xs-4 desc">
+									CRM Software for lifetime access
+								</div>
+								<div class="col-xs-3 qty">
+									1
+								</div>
+								<div class="col-xs-5 amount text-right">
+									Rp 250.000
+								</div>
+							</div>
+							
+						</div>
+						<div class="total text-right">
+							
+							<div class="field grand-total">
+								Total <span>Rp 250.000</span>
+							</div>
+						</div>
+						<div class="total text-left">
+							
+							<div>
+							<p>
+								<strong>Rekening Bank</strong>
+							</p>	
+								<ul>
+									<li>BRI	475701008885538 a.n I Putu Nata Adhikusuma</li>
+									<li>Mandiri 1450011568033 a.n I Putu Nata Adhikusuma</li>					
+								</ul>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+
+				<div class="footer">
+					Copyright © 2017. Kerjasales.com
+				</div>
+			</div>
+		</div>
+	</div>
+</div>    
+{% else %} 
+<h1> You dont have any invoice </h1>
+{% endif %}               
+
+{% endblock %}

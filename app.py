@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
-from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, ResetPasswordForm, ChangeImagesForm
+from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm, ChangeImagesForm
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from datetime import datetime, timedelta
 from config import secret,database
@@ -13,6 +13,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
+app.debug = True
 
 
 #login manager
@@ -39,6 +40,9 @@ class User(db.Model):
 	email = db.Column(db.String(100))
 	password = db.Column(db.String(500))
 	phone = db.Column(db.String(200))
+	status = db.Column(db.String(100))
+	created_date = db.Column(db.DateTime())
+	due_date = db.Column(db.DateTime())
 	contact = db.relationship("Contact",backref="owner",lazy="dynamic")
 	deals = db.relationship("Deals",backref="deals",lazy="dynamic")
 
@@ -99,7 +103,9 @@ def UserRegister():
 	form = UserRegisterForm()
 	if form.validate_on_submit():
 		hass_pass = generate_password_hash(form.password.data,method="sha256")
-		user = User(username=form.username.data,email=form.email.data,phone=form.phone.data,password=hass_pass)
+		created = datetime.today()
+		due = created + timedelta(days=15)
+		user = User(username=form.username.data,email=form.email.data,phone=form.phone.data,password=hass_pass,status="trial",created_date=created,due_date=due)
 		db.session.add(user)
 		db.session.commit()
 
@@ -365,7 +371,30 @@ def DeleteDeals(id):
 
 
 
+############################ Invoice ####################################
+@app.route("/dashboard/invoice",methods=["GET","POST"])
+@login_required
+def UserInvoice():
+	user = User.query.filter_by(id=current_user.id).first()
+	return render_template("user/invoice.html",user=user)
 
+
+@app.route("/dashboard/konfirmasi",methods=["GET","POST"])
+@login_required
+def Konfirmasi():
+	form = KonfirmasiForm()
+	if form.validate_on_submit():
+		nama = form.nama.data
+		bank = form.bank.data 
+		usermail = current_user.email
+		email = "iputunataadhikusuma@gmail.com"
+		msg = Message("Invoice Iklan", sender="kerjasales.com@gmail.com", recipients=[email])		
+		msg.body = "Ada yg bayar nih nama : {},bank : {},email : {} ".format(nama,bank,usermail)
+		mail.send(msg)
+
+		flash("Konfirmasi Pembayaran diterima,akan kami segera validasi","success")
+		return redirect(url_for("UserDashboard"))
+	return render_template("user/confirm.html",form=form)	
 
 
 

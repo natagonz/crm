@@ -1,26 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-
-<!-- memberfull -->
-<script type="text/javascript">
-  window.MemberfulOptions = {site: "https://kerjasales.memberful.com"};
-
-  (function() {
-    var s   = document.createElement('script');
-
-    s.type  = 'text/javascript';
-    s.async = true;
-    s.src   = 'https://d35xxde4fgg0cx.cloudfront.net/assets/embedded.js';
-
-    setup = function() { window.MemberfulEmbedded.setup(); }
-
-    s.addEventListener("load", setup, false);
-
-    ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
-  })();
-</script>
-<!-- end memberfull -->
+    
 
 	<meta charset="utf-8" />
 	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
@@ -89,13 +70,21 @@
                         <p>Deals</p>
                     </a>
                 </li>
-                
+                {% if current_user.status == "trial" %}
                 <li>
-                    <a href="notifications.html">
+                    <a href="/dashboard/invoice">
                         <i class="ti-bell"></i>
                         <p>Invoice</p>
                     </a>
                 </li>
+
+                <li>
+                    <a href="/dashboard/konfirmasi">
+                        <i class="ti-envelope"></i>
+                        <p>Konfirmasi Pembayaran</p>
+                    </a>
+                </li>
+                {% endif %}
                 
 			
             </ul>
@@ -136,6 +125,11 @@
 
         <div class="content">
             <div class="container-fluid">
+            {% if current_user.status == "trial" %}
+            <div class="alert alert-warning" role="alert">
+                Anda dalam periode trial sampai {{current_user.due_date.strftime("%d/%m/%Y") }} Silakan bayar <a href="/dashboard/invoice">disini</a>  
+            </div>
+            {% endif %}
        {% include "includes/_message.html" %}
        {% block content %}
        {% endblock %}
