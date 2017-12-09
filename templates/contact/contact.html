@@ -23,10 +23,7 @@
 {% for contact in contacts %}
   <div class="col-md-6 col-lg-4">
     <div class="card hover-shadow">
-      <div class="card-body text-center pt-1 pb-20">
-        <a href="/dashboard/contact/{{contact.id}}">
-          <img class="avatar avatar-xxl" src="http://kerjasales.com/static/img/profile/{{contact.image}}">
-        </a>
+      <div class="card-body text-center pt-1 pb-20">      
         <h5 class="mt-2 mb-0"><a class="hover-primary" href="/dashboard/contact/{{contact.id}}">{{ contact.name }}</a></h5>
         <span>{{ contact.company }}</span>
       </div>
