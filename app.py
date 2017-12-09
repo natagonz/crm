@@ -219,82 +219,10 @@ def UserResetPassword():
 @login_required
 def UserDashboard():	
 	deals = Deals.query.filter_by(deals_id=current_user.id).all()
-<<<<<<< HEAD
 	len_deal = len(deals)
-	len_contact = len(contact)
-	return render_template("user/dashboard.html",len_contact=len_contact,len_deal=len_deal)
-
-
-
-
-################################# contact ###############################################
-
-
-@app.route("/dashboard/contact",methods=["GET","POST"])
-def UserContact():
-	contacts = Contact.query.filter_by(owner_id=current_user.id).all()
-	return render_template("user/contact.html",contacts=contacts)
-
-
-
-@app.route("/dashboard/contact/<string:id>",methods=["GET","POST"])
-def UserContactId(id):
-	contact = Contact.query.filter_by(id=id).first()
-	return render_template("user/contact_id.html",contact=contact)
-
-
-
-@app.route("/dashboard/add-contact",methods=["GET","POST"])
-def AddContact():
-	form = AddContactForm()
-	if form.validate_on_submit():
-		contact = Contact(name=form.name.data,email=form.email.data,phone=form.phone.data,company=form.company.data,address=form.address.data,about=form.about.data,owner_id=current_user.id,image=filename)
-		db.session.add(contact)
-		db.session.commit()
-
-		flash("Contact Added","success")
-		return redirect(url_for("UserContact"))
-
-	return render_template("user/add_contact.html",form=form)
-
-@app.route("/dashboard/edit-contact/<string:id>",methods=["GET","POST"])
-def EditContact(id):
-	form = AddContactForm()
-	contact = Contact.query.filter_by(id=id).first()
-	form.name.data = contact.name
-	form.email.data = contact.email
-	form.phone.data = contact.phone
-	form.address.data = contact.address
-	form.company.data = contact.company
-	form.about.data = contact.about
-	if form.validate_on_submit():
-		contact.name = request.form["name"]
-	  	contact.email = request.form["email"]
-	 	contact.phone = request.form["phone"]
-	 	contact.address = request.form["address"]
-	  	contact.company = request.form["company"]
-	 	contact.about = request.form["about"]
-	 	db.session.commit()
-	 	flash("Contact successfully edited","success")
-	 	return redirect(url_for("UserContact"))
-
-	return render_template("user/edit_contact.html",form=form)
-
-
-
-@app.route("/dashboard/delete-contact/<string:id>",methods=["GET","POST"])
-def DeleteContact(id):
-	contact = Contact.query.filter_by(id=id).first()
-	db.session.delete(contact)
-	db.session.commit()
-
-	flash("Contact successfully deleted","success")
-	return redirect(url_for("UserContact"))
-
-=======
-	len_deal = len(deals)	
 	return render_template("user/dashboard.html",len_deal=len_deal)
->>>>>>> 0ae6d84643bd370fde2e35c5ab5dee09083e5904
+
+
 
 
 
