@@ -120,7 +120,7 @@ def UserRegister():
 
 
 @app.route("/login",methods=["GET","POST"])
-@limiter.limit("3 per day")
+@limiter.limit("100 per day")
 def UserLogin():
 	form = UserLoginForm()
 	if form.validate_on_submit():
