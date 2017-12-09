@@ -13,7 +13,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
-app.debug = True
+
 
 
 #login manager
@@ -254,7 +254,6 @@ def UserContactId(id):
 def AddContact():
 	form = AddContactForm()
 	if form.validate_on_submit():
-		filename = images.save(form.images.data)
 		contact = Contact(name=form.name.data,email=form.email.data,phone=form.phone.data,company=form.company.data,address=form.address.data,about=form.about.data,owner_id=current_user.id,image=filename)
 		db.session.add(contact)
 		db.session.commit()
