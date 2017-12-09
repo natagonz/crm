@@ -1,3 +1,4 @@
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField
 from wtforms.validators import InputRequired, EqualTo, Email, Length
@@ -29,7 +30,7 @@ class AddContactForm(FlaskForm):
 	company = StringField("Company",validators=[Length(max=100)])
 	address = StringField("Address",validators=[Length(max=100)])
 	about = TextAreaField("About")
-	images = FileField("Upload Photo",validators=[FileAllowed(images,"Images only")])
+	images = FileField("Upload Photo,max 2mb",validators=[FileAllowed(images,"Images only")])
 
 
 class AddDealsForm(FlaskForm):
@@ -48,10 +49,9 @@ class ResetPasswordForm(FlaskForm):
 	confirm = PasswordField("Confirm Password")
 
 class ChangeImagesForm(FlaskForm):
-	images = FileField("Upload Photo",validators=[FileAllowed(images,"Images only")])
+	images = FileField("Upload Photo,max 2mb",validators=[FileAllowed(images,"Images only")])
 
 class KonfirmasiForm(FlaskForm):
 	nama = StringField("Nama Di Rekening",validators=[InputRequired(),Length(max=100)])
 	bank = StringField("Nama Bank",validators=[InputRequired(),Length(max=100)])
 	
-

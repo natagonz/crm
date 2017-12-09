@@ -5,15 +5,19 @@ from flask_login import LoginManager , UserMixin, login_user, login_required, lo
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
 from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm, ChangeImagesForm
-from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_uploads import UploadSet, IMAGES, configure_uploads,patch_request_class
 from datetime import datetime, timedelta
 from config import secret,database
+from flask_limiter import Limiter 
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
+limiter = Limiter(app, key_func=get_remote_address)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
 app.debug = True
+
 
 
 #login manager
@@ -26,10 +30,21 @@ app.config["UPLOADED_IMAGES_DEST"] = "static/img/profile/"
 app.config["UPLOADED_IMAGES_URL"] = "http://127.0.0.1:5000/static/img/profile/"
 configure_uploads(app,images)
 
+
+
 #fungsi mail
 app.config.from_pyfile("config.py") 
 mail = Mail(app)
 s = URLSafeTimedSerializer("secret")
+
+
+
+'''class Admin(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	username = db.Column(db.String(100))
+	email = db.Column(db.String(100))
+	password = db.Column(db.String(500))
+	security = db.Column(db.String(100)) '''
 
 
 
@@ -90,6 +105,30 @@ def user_loader(user_id):
 
 
 
+
+##################### error handler ####################################################
+@app.errorhandler(429)
+def Error429(e):
+	return "anda akan di kunci selama 1 hari,kembali lagi besok"
+
+@app.errorhandler(404)
+def Error404(e):
+	return redirect(url_for("Index"))
+
+@app.errorhandler(413)
+def Error413(e):
+	flash("File terlalu besar,maksimal 1mb","danger")
+	return redirect(url_for("UserDashboard"))	
+
+
+
+
+
+
+
+
+
+
 #################### front page & user function  ####################################
 
 @app.route("/",methods=["GET","POST"])
@@ -115,6 +154,7 @@ def UserRegister():
 
 
 @app.route("/login",methods=["GET","POST"])
+@limiter.limit("3 per day")
 def UserLogin():
 	form = UserLoginForm()
 	if form.validate_on_submit():
@@ -401,17 +441,6 @@ def Konfirmasi():
 
 
 
-
-
-
-
-
-
-
-
-
-
-	
 
 
 
