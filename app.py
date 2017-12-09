@@ -4,15 +4,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
-from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm, ChangeImagesForm
-from flask_uploads import UploadSet, IMAGES, configure_uploads
+from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm
 from datetime import datetime, timedelta
 from config import secret,database
+from flask_limiter import Limiter 
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
+limiter = Limiter(app, key_func=get_remote_address)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
+
 
 
 
@@ -21,10 +24,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "UserLogin"
 
-images = UploadSet("images",IMAGES)
-app.config["UPLOADED_IMAGES_DEST"] = "static/img/profile/"
-app.config["UPLOADED_IMAGES_URL"] = "http://127.0.0.1:5000/static/img/profile/"
-configure_uploads(app,images)
+
 
 #fungsi mail
 app.config.from_pyfile("config.py") 
@@ -42,8 +42,7 @@ class User(db.Model):
 	phone = db.Column(db.String(200))
 	status = db.Column(db.String(100))
 	created_date = db.Column(db.DateTime())
-	due_date = db.Column(db.DateTime())
-	contact = db.relationship("Contact",backref="owner",lazy="dynamic")
+	due_date = db.Column(db.DateTime())	
 	deals = db.relationship("Deals",backref="deals",lazy="dynamic")
 
 	def is_active(self):
@@ -59,16 +58,6 @@ class User(db.Model):
 		return False
 
 
-class Contact(db.Model):
-	id = db.Column(db.Integer,primary_key=True)
-	name = db.Column(db.String(100))
-	email = db.Column(db.String(100))
-	phone = db.Column(db.String(100))
-	company = db.Column(db.String(200))
-	address = db.Column(db.String(200))
-	about = db.Column(db.UnicodeText())
-	image = db.Column(db.String(100))
-	owner_id = db.Column(db.Integer(),db.ForeignKey("user.id"))
 
 
 
@@ -87,6 +76,22 @@ class Deals(db.Model):
 @login_manager.user_loader
 def user_loader(user_id):
 	return User.query.get(int(user_id))
+
+
+
+
+##################### error handler ####################################################
+@app.errorhandler(429)
+def Error429(e):
+	return "anda akan di kunci selama 1 hari,kembali lagi besok"
+
+@app.errorhandler(404)
+def Error404(e):
+	return redirect(url_for("Index"))
+
+
+
+
 
 
 
@@ -115,6 +120,7 @@ def UserRegister():
 
 
 @app.route("/login",methods=["GET","POST"])
+@limiter.limit("3 per day")
 def UserLogin():
 	form = UserLoginForm()
 	if form.validate_on_submit():
@@ -203,18 +209,6 @@ def UserResetPassword():
 			
 
 
-@app.route("/dashboard/change-images/<string:id>",methods=["GET","POST"])
-@login_required
-def ChangeImages(id):
-	form = ChangeImagesForm()
-	if form.validate_on_submit():
-		contact = Contact.query.filter_by(id=id).first()
-		filename = images.save(form.images.data)
-		contact.image = filename
-		db.session.commit()
-		flash("Images been updated","success")
-		return redirect(url_for("UserContact"))
-	return render_template("user/photo.html",form=form)	
 
 
 
@@ -223,9 +217,9 @@ def ChangeImages(id):
 ################################# dashboard #############################
 @app.route("/dashboard",methods=["GET","POST"])
 @login_required
-def UserDashboard():
-	contact = Contact.query.filter_by(owner_id=current_user.id).all()
+def UserDashboard():	
 	deals = Deals.query.filter_by(deals_id=current_user.id).all()
+<<<<<<< HEAD
 	len_deal = len(deals)
 	len_contact = len(contact)
 	return render_template("user/dashboard.html",len_contact=len_contact,len_deal=len_deal)
@@ -297,6 +291,10 @@ def DeleteContact(id):
 	flash("Contact successfully deleted","success")
 	return redirect(url_for("UserContact"))
 
+=======
+	len_deal = len(deals)	
+	return render_template("user/dashboard.html",len_deal=len_deal)
+>>>>>>> 0ae6d84643bd370fde2e35c5ab5dee09083e5904
 
 
 
@@ -400,17 +398,6 @@ def Konfirmasi():
 
 
 
-
-
-
-
-
-
-
-
-
-
-	
 
 
 

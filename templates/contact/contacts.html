@@ -1,0 +1,41 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Dashboard {% endblock%}
+
+
+{% block content %}
+
+<!-- floating icon -->
+<ul id="social_side_links">
+  <li><a href="/dashboard/add-contact"><img class="icon-float" src="https://cdn0.iconfinder.com/data/icons/round-ui-icons/512/add_blue.png" alt="" /></a></li>
+</ul>
+
+
+
+
+<link href="{{url_for ('static',filename='css/contactlist.css')}}" rel="stylesheet"/> 
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="row">
+{% for contact in contacts %}
+<div class="col-md-10">
+    <div class="card b-1 hover-shadow mb-20">
+        <div class="media card-body">
+            <div class="media-body">
+                <div class="mb-2">
+                    <span class="fs-20 pr-16"> <a href="/dashboard/contact/{{ contact.id }}">{{ contact.name }} </a></span>
+                </div>
+                <small class="fs-16 fw-300 ls-1"> {{ contact.company }}</small>
+            </div>
+        </div>
+        <footer class="card-footer flexbox align-items-center">
+            <div class="card-hover-show">
+                <a class="btn btn-xs fs-10 btn-bold btn-info" href="/dashboard/contact/{{ contact.id }}">Lihat</a>
+            </div>
+        </footer>
+    </div>
+</div>    
+{% endfor %}
+</div>
+
+{% endblock %}

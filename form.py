@@ -1,11 +1,7 @@
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField
 from wtforms.validators import InputRequired, EqualTo, Email, Length
-from flask_wtf.file import FileField, FileAllowed, FileRequired
-from flask_uploads import UploadSet, IMAGES, configure_uploads
-
-
-images = UploadSet("images",IMAGES)
 
 
 
@@ -29,9 +25,7 @@ class AddContactForm(FlaskForm):
 	company = StringField("Company",validators=[Length(max=100)])
 	address = StringField("Address",validators=[Length(max=100)])
 	about = TextAreaField("About")
-	images = FileField("Upload Photo",validators=[FileAllowed(images,"Images only")])
-
-
+	
 class AddDealsForm(FlaskForm):
 	name = StringField("Name",validators=[Length(max=30)])
 	title = StringField("Title",validators=[Length(max=30)])
@@ -47,11 +41,8 @@ class ResetPasswordForm(FlaskForm):
 	password = PasswordField("Password",validators=[InputRequired(),Length(min=8),EqualTo("confirm",message="Password not match")])
 	confirm = PasswordField("Confirm Password")
 
-class ChangeImagesForm(FlaskForm):
-	images = FileField("Upload Photo",validators=[FileAllowed(images,"Images only")])
 
 class KonfirmasiForm(FlaskForm):
 	nama = StringField("Nama Di Rekening",validators=[InputRequired(),Length(max=100)])
 	bank = StringField("Nama Bank",validators=[InputRequired(),Length(max=100)])
 	
-
