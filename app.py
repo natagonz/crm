@@ -114,7 +114,7 @@ def UserRegister():
 	if form.validate_on_submit():
 		hass_pass = generate_password_hash(form.password.data,method="sha256")
 		created = datetime.today()
-		due = created + timedelta(days=15)
+		due = created + timedelta(days=7)
 		user = User(username=form.username.data,email=form.email.data,phone=form.phone.data,password=hass_pass,status="trial",created_date=created,due_date=due)
 		db.session.add(user)
 		db.session.commit()
