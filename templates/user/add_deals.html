@@ -4,30 +4,32 @@
 
 
 {% block content %}
+
 <div class="row">                
                   <div class="col-lg-11 col-md-10">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Add Deals</h4>
+                                <h4 class="title">Tambah Data Penjualan</h4>
                             </div>
                             <div class="content">
-                            	{% from "includes/_formhelpers.html" import render_field %}
+
+                           	{% from "includes/_formhelpers.html" import render_field %}
                                <form method="POST" enctype="multipart/form-data">
                				   {{ form.hidden_tag() }}
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.title, class="form-control",placeholder="Title of your deals")}}
+                                                {{ render_field(form.product, class="form-control",placeholder="Nama Produk")}}
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.amount, class="form-control",placeholder="How much your deals value")}}
+                                                {{ render_field(form.amount, class="form-control",placeholder="Harga")}}
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.status, class="form-control",placeholder="Your deals status")}}
+                                                {{ render_field(form.status, class="form-control",placeholder="Status Penjualan")}}
                                             </div>
                                         </div>
                                     </div>
@@ -35,39 +37,33 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                             {{ render_field(form.description, class="form-control",placeholder="You deals description",id="editor")}}
+                                             {{ render_field(form.description, class="form-control",placeholder="Catatan",id="editor")}}
                 
                                             </div>
                                         </div>
                                     </div>
+                                    
                                      <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.name, class="form-control",placeholder="Your customer")}}
+                                                {{ render_field(form.name, class="form-control",placeholder="Nama Pembeli")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.email, class="form-control",placeholder="Customer Email")}}
+                                                {{ render_field(form.email, class="form-control",placeholder="Email Pembeli")}}
                                             </div>
                                         </div>
-                                       
-                                    </div> 
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.phone, class="form-control",placeholder="Customer phone")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                {{ render_field(form.mobile, class="form-control",placeholder="Customer Mobile Phone6")}}
+                                                {{ render_field(form.phone, class="form-control",placeholder="Telepon Pembeli")}}
                                             </div>
                                         </div>
                                        
                                     </div> 
+                                    
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-info btn-fill btn-wd">Add Deals</button>
+                                        <button type="submit" class="btn btn-info btn-fill btn-wd">Simpan</button>
                                     </div>
                                     <div class="clearfix"></div>
                                 </form>
