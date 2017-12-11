@@ -15,7 +15,6 @@ db = SQLAlchemy(app)
 limiter = Limiter(app, key_func=get_remote_address)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
-app.debug = True
 
 
 
