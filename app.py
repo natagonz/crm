@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 limiter = Limiter(app, key_func=get_remote_address)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
+app.debug = True
 
 
 
@@ -63,15 +64,14 @@ class User(db.Model):
 
 class Deals(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	title = db.Column(db.String(30))
+	product = db.Column(db.String(30))
 	description = db.Column(db.UnicodeText())
 	amount = db.Column(db.String(50))
+	status = db.Column(db.String(30))
 	name = db.Column(db.String(100))
 	email = db.Column(db.String(100))
 	phone = db.Column(db.String(100))
-	mobile = db.Column(db.String(100))
-	created = db.Column(db.DateTime())	
-	status = db.Column(db.String(30))
+	created = db.Column(db.DateTime())		
 	deals_id = db.Column(db.Integer(),db.ForeignKey("user.id"))
 
 
@@ -248,11 +248,11 @@ def AddDeals():
 	form = AddDealsForm()
 	if form.validate_on_submit():
 		today = datetime.today()
-		deals = Deals(title=form.title.data,amount=form.amount.data,status=form.status.data,description=form.description.data,created=today,name=form.name.data,email=form.email.data,phone=form.phone.data,mobile=form.mobile.data,deals_id=current_user.id)
+		deals = Deals(product=form.product.data,amount=form.amount.data,status=form.status.data,description=form.description.data,created=today,name=form.name.data,email=form.email.data,phone=form.phone.data,deals_id=current_user.id)
 		db.session.add(deals)
 		db.session.commit()
 
-		flash("Deals berhasil di tambah","success")
+		flash("Data berhasil di tambah","success")
 		return redirect(url_for("UserDeals"))	
 	return render_template("user/add_deals.html",form=form)
 
@@ -270,26 +270,24 @@ def UserDealsId(id):
 def EditDeals(id):
 	form = AddDealsForm()
 	deal = Deals.query.filter_by(id=id).first()
-	form.title.data = deal.title
+	form.product.data = deal.product
 	form.amount.data = deal.amount
 	form.status.data = deal.status
 	form.description.data = deal.description
 	form.name.data = deal.name
 	form.email.data = deal.email
-	form.phone.data = deal.phone
-	form.mobile.data = deal.mobile
+	form.phone.data = deal.phone	
 	if form.validate_on_submit():		
-		deal.title = request.form["title"]
+		deal.product = request.form["product"]
 		deal.amount = request.form["amount"]
 		deal.status = request.form["status"]
 		deal.description = request.form["description"]		
 		deal.name = request.form["name"]
 		deal.email = request.form["email"]
-		deal.phone = request.form["phone"]
-		deal.mobile = request.form["mobile"]
+		deal.phone = request.form["phone"]		
 		db.session.commit()
 
-		flash("Deals berhasil di edit","success")
+		flash("Data berhasil di edit","success")
 		return redirect(url_for("UserDeals"))
 
 	return render_template("user/edit_deals.html",form=form)	
@@ -303,7 +301,7 @@ def DeleteDeals(id):
 	db.session.delete(deal)
 	db.session.commit()
 
-	flash("Deals berhasil di hapus","success")
+	flash("Data berhasil di hapus","success")
 	return redirect(url_for("UserDeals"))
 
 

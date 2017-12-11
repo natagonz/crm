@@ -20,15 +20,14 @@ class UserLoginForm(FlaskForm):
 
 
 class AddDealsForm(FlaskForm):	
-	title = StringField("Deals Title",validators=[Length(max=30)])
-	amount = StringField("Deals Value",validators=[Length(max=50)])
-	description = TextAreaField("Deals Description")	
-	name = StringField("Name or Company",validators=[Length(max=100)])
-	email = StringField("Email",validators=[Length(max=100)])
-	phone = StringField("Phone",validators=[Length(max=100)])
-	mobile = StringField("Mobile Phone",validators=[Length(max=100)])
-	status = StringField("Deals Status",validators=[Length(max=30)])
-
+	product = StringField("Produk",validators=[Length(max=100)])
+	amount = StringField("Harga Produk",validators=[Length(max=100)])
+	description = TextAreaField("Catatan")	
+	status = StringField("Status Penjualan",validators=[Length(max=100)])	
+	name = StringField("Nama Konsumen",validators=[Length(max=100)])
+	email = StringField("Email Konsumen",validators=[Length(max=100)])
+	phone = StringField("Telepon Konsumen",validators=[Length(max=100)])
+	
 
 class ForgotPasswordForm(FlaskForm):
 	email = StringField("Email",validators=[Length(max=100),Email()])

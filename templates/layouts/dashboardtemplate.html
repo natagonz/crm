@@ -13,6 +13,9 @@
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <!-- Bootstrap core CSS     -->
     <link href="{{url_for ('static',filename='css/bootstrap.min.css')}}" rel="stylesheet"/>
@@ -47,7 +50,7 @@
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="/dashboard" class="simple-text">
-                     CRM
+                     Kerja Sales
                 </a>
             </div>
 
@@ -62,7 +65,7 @@
                 <li>
                     <a href="/dashboard/deals">
                         <i class="ti-pin-alt"></i>
-                        <p>Deals</p>
+                        <p>Penjualan</p>
                     </a>
                 </li>
                 {% if current_user.status == "trial" %}
@@ -167,24 +170,16 @@
     <script type="text/javascript">
     CKEDITOR.replace("editor")
     </script>
+     <script>
+    $(function() {
+        $( ".tangggel" ).datepicker();
+    });
+    </script>
 
 
+                    
 
-	<script type="text/javascript">
-    	$(document).ready(function(){
 
-        	demo.initChartist();
-
-        	$.notify({
-            	icon: 'ti-gift',
-            	message: "Welcome to <b>Paper Dashboard</b> - a beautiful Bootstrap freebie for your next project."
-
-            },{
-                type: 'success',
-                timer: 4000
-            });
-
-    	});
-	</script>
+	
 
 </html>
