@@ -33,18 +33,35 @@
           <div class="panel-body">
             <table class="table profile__table">
               <tbody>
+                 <tr>
+                  <th><strong>Deal Status</strong></th>
+                  <td>{{ deal.status }}</td>
+                </tr>
+                 <tr>
+                  <th><strong>Deal Value</strong></th>
+                  <td>{{ deal.amount }}</td>
+                </tr>
                 <tr>
-                  <th><strong>Name Or Company</strong></th>
+                  <th><strong>Client</strong></th>
                   <td>{{ deal.name }}</td>
+                </tr>
+                 <tr>
+                  <th><strong>Client Email </strong></th>
+                  <td>{{ deal.email }}</td>
+                </tr>
+                 <tr>
+                  <th><strong>Client Phone</strong></th>
+                  <td>{{ deal.phone }}</td>
+                </tr>
+                 <tr>
+                  <th><strong>Client Mobile Phone</strong></th>
+                  <td>{{ deal.mobile }}</td>
                 </tr>
                 <tr>
                   <th><strong>Created on </strong></th>
                   <td>{{ deal.created.strftime("%d/%m/%Y") }}</td>
                 </tr>
-                 <tr>
-                  <th><strong>Deal Status</strong></th>
-                  <td>{{ deal.status }}</td>
-                </tr>
+                
               
               
               </tbody>

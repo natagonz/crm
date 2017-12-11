@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
-from form import UserRegisterForm, UserLoginForm, AddContactForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm
+from form import UserRegisterForm, UserLoginForm, AddDealsForm, ForgotPasswordForm, KonfirmasiForm, ResetPasswordForm
 from datetime import datetime, timedelta
 from config import secret,database
 from flask_limiter import Limiter 
@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 limiter = Limiter(app, key_func=get_remote_address)
 app.config["SQLALCHEMY_DATABASE_URI"] = database
 app.config["SECRET_KEY"] = secret
+app.debug = True
 
 
 
@@ -63,12 +64,17 @@ class User(db.Model):
 
 class Deals(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(30))
 	title = db.Column(db.String(30))
 	description = db.Column(db.UnicodeText())
-	created = db.Column(db.DateTime())
+	amount = db.Column(db.String(50))
+	name = db.Column(db.String(100))
+	email = db.Column(db.String(100))
+	phone = db.Column(db.String(100))
+	mobile = db.Column(db.String(100))
+	created = db.Column(db.DateTime())	
 	status = db.Column(db.String(30))
 	deals_id = db.Column(db.Integer(),db.ForeignKey("user.id"))
+
 
 
 
@@ -120,7 +126,7 @@ def UserRegister():
 
 
 @app.route("/login",methods=["GET","POST"])
-@limiter.limit("3 per day")
+@limiter.limit("100 per day")
 def UserLogin():
 	form = UserLoginForm()
 	if form.validate_on_submit():
@@ -243,11 +249,11 @@ def AddDeals():
 	form = AddDealsForm()
 	if form.validate_on_submit():
 		today = datetime.today()
-		deals = Deals(name=form.name.data,title=form.title.data,description=form.description.data,created=today,status=form.status.data,deals_id=current_user.id)
+		deals = Deals(title=form.title.data,amount=form.amount.data,status=form.status.data,description=form.description.data,created=today,name=form.name.data,email=form.email.data,phone=form.phone.data,mobile=form.mobile.data,deals_id=current_user.id)
 		db.session.add(deals)
 		db.session.commit()
 
-		flash("Deals Successfully Added","success")
+		flash("Deals berhasil di tambah","success")
 		return redirect(url_for("UserDeals"))	
 	return render_template("user/add_deals.html",form=form)
 
@@ -265,18 +271,26 @@ def UserDealsId(id):
 def EditDeals(id):
 	form = AddDealsForm()
 	deal = Deals.query.filter_by(id=id).first()
-	form.name.data = deal.name
 	form.title.data = deal.title
-	form.description.data = deal.description
+	form.amount.data = deal.amount
 	form.status.data = deal.status
-	if form.validate_on_submit():
-		deal.name = request.form["name"]
+	form.description.data = deal.description
+	form.name.data = deal.name
+	form.email.data = deal.email
+	form.phone.data = deal.phone
+	form.mobile.data = deal.mobile
+	if form.validate_on_submit():		
 		deal.title = request.form["title"]
-		deal.description = request.form["description"]
+		deal.amount = request.form["amount"]
 		deal.status = request.form["status"]
+		deal.description = request.form["description"]		
+		deal.name = request.form["name"]
+		deal.email = request.form["email"]
+		deal.phone = request.form["phone"]
+		deal.mobile = request.form["mobile"]
 		db.session.commit()
 
-		flash("Deals been edited","success")
+		flash("Deals berhasil di edit","success")
 		return redirect(url_for("UserDeals"))
 
 	return render_template("user/edit_deals.html",form=form)	
@@ -290,7 +304,7 @@ def DeleteDeals(id):
 	db.session.delete(deal)
 	db.session.commit()
 
-	flash("Deals been deleted","success")
+	flash("Deals berhasil di hapus","success")
 	return redirect(url_for("UserDeals"))
 
 

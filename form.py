@@ -18,18 +18,15 @@ class UserLoginForm(FlaskForm):
 	password = PasswordField("Password",validators=[InputRequired()])
 
 
-class AddContactForm(FlaskForm):
-	name = StringField("Name",validators=[Length(max=200)])
-	email = StringField("Email",validators=[Length(max=100),Email()])
+
+class AddDealsForm(FlaskForm):	
+	title = StringField("Deals Title",validators=[Length(max=30)])
+	amount = StringField("Deals Value",validators=[Length(max=50)])
+	description = TextAreaField("Deals Description")	
+	name = StringField("Name or Company",validators=[Length(max=100)])
+	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Phone",validators=[Length(max=100)])
-	company = StringField("Company",validators=[Length(max=100)])
-	address = StringField("Address",validators=[Length(max=100)])
-	about = TextAreaField("About")
-	
-class AddDealsForm(FlaskForm):
-	name = StringField("Name",validators=[Length(max=30)])
-	title = StringField("Title",validators=[Length(max=30)])
-	description = TextAreaField("Description")
+	mobile = StringField("Mobile Phone",validators=[Length(max=100)])
 	status = StringField("Deals Status",validators=[Length(max=30)])
 
 
